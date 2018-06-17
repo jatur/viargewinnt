@@ -10,6 +10,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.javaspark:spark-core:2.7.2'
+    compile 'com.sparkjava:spark-core:2.7.2'
     testCompile 'junit:junit:4.12'
 }
