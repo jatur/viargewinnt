@@ -1,9 +1,13 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
 group 'de.fhdortmund'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-
 sourceCompatibility = 1.8
+mainClassName = 'de.fhdortmund.viargewinnt.App'
 
 repositories {
     mavenCentral()
@@ -11,5 +15,6 @@ repositories {
 
 dependencies {
     compile 'com.sparkjava:spark-core:2.7.2'
+    compile 'org.slf4j:slf4j-simple:1.7.25'
     testCompile 'junit:junit:4.12'
 }
