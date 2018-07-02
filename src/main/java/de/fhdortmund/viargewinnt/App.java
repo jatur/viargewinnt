@@ -1,25 +1,28 @@
 package de.fhdortmund.viargewinnt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-
-import static spark.Spark.halt;
-import static spark.Spark.post;
-import static spark.Spark.webSocket;
+import static spark.Spark.*;
 
 public class App {
     private static Map<Long, Game> games = new HashMap<>();
     private static AtomicLong nextGameId = new AtomicLong(0);
 
+
     public static void main(String[] args) {
+
+        final Logger log = LoggerFactory.getLogger(App.class);
         webSocket("/state", UpdateStateSocket.class);
 
         post("/create", (req, res) -> {
             long id = nextGameId.incrementAndGet();
             games.put(id, new Game(id));
-
+            log.info("game created with id {}",id);
             return id;
         });
 
@@ -36,6 +39,7 @@ public class App {
             }
             game.players.add(name);
 
+            log.info("player {} joined the game",name);
             return "ok";
         });
 
@@ -51,7 +55,7 @@ public class App {
             }
 
             game.start();
-
+            log.info("game with id {} started ",id);
             return "ok";
         });
 
@@ -70,7 +74,7 @@ public class App {
             }
 
             game.move(position);
-
+            log.info("player {} set position {} in Game {}",player,position,id);
             return "ok";
         });
     }

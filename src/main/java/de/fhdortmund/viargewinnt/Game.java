@@ -30,7 +30,6 @@ class Game {
 
         grid[x][y] = currentPlayer;
 
-        // todo win detection
         TurnEvent event = new TurnEvent(this, currentPlayer, isWon());
 
         int playerIndex = players.indexOf(currentPlayer);
