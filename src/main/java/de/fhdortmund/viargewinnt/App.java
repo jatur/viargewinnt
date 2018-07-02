@@ -22,7 +22,7 @@ public class App {
         post("/create", (req, res) -> {
             long id = nextGameId.incrementAndGet();
             games.put(id, new Game(id));
-            log.info("game created with id {}",id);
+            log.info("game created with id {}", id);
             return id;
         });
 
@@ -38,8 +38,9 @@ public class App {
                 halt(400, "name is taken");
             }
             game.players.add(name);
+            UpdateStateSocket.sendEvent(id,new TurnEvent(game,"noone",false,MessageType.PLAYERUPDTAE));
 
-            log.info("player {} joined the game",name);
+            log.info("player {} joined the game", name);
             return "ok";
         });
 
@@ -55,7 +56,8 @@ public class App {
             }
 
             game.start();
-            log.info("game with id {} started ",id);
+            UpdateStateSocket.sendEvent(id,new TurnEvent(game,"noone",false,MessageType.GAMESTART));
+            log.info("game with id {} started ", id);
             return "ok";
         });
 
@@ -74,7 +76,7 @@ public class App {
             }
 
             game.move(position);
-            log.info("player {} set position {} in Game {}",player,position,id);
+            log.info("player {} set position {} in Game {}", player, position, id);
             return "ok";
         });
     }

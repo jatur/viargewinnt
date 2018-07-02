@@ -30,13 +30,13 @@ class Game {
 
         grid[x][y] = currentPlayer;
 
-        TurnEvent event = new TurnEvent(this, currentPlayer, isWon());
+        TurnEvent event = new TurnEvent(this, currentPlayer, isWon(),MessageType.GAMEUPDATE);
 
         int playerIndex = players.indexOf(currentPlayer);
         playerIndex = (playerIndex + 1) % players.size();
         currentPlayer = players.get(playerIndex);
 
-        UpdateStateSocket.sendUpdate(id, event);
+        UpdateStateSocket.sendEvent(id, event);
     }
 
     private int findY(int x) {

@@ -1,23 +1,24 @@
 package de.fhdortmund.viargewinnt;
 
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @WebSocket
 public class UpdateStateSocket {
     private static final Map<Long, List<Session>> gameSessions = new HashMap<>();
     private static final Gson gson = new Gson().newBuilder().setPrettyPrinting().create();
 
-    static void sendUpdate(long gameId, TurnEvent event) {
+    static void sendEvent(long gameId, TurnEvent event) {
         List<Session> sessions = gameSessions.get(gameId);
         if (sessions == null) {
             return;
@@ -31,6 +32,8 @@ public class UpdateStateSocket {
             }
         });
     }
+
+
 
     @OnWebSocketConnect
     public void connected(Session session) {
