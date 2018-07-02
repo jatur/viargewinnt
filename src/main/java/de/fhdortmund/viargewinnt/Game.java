@@ -14,10 +14,17 @@ class Game {
     String currentPlayer;
     private final int width = 7;
     private final int height = 6;
-    private String[][] grid = new String[width][height];
+    private Column[] grid = new Column[width];
+
+    class Column {
+        private String[] pieces = new String[height];
+    }
 
     Game(long id) {
         this.id = id;
+        for (int x = 0; x < width; x++) {
+            grid[x] = new Column();
+        }
     }
 
     void start() {
@@ -28,7 +35,7 @@ class Game {
     void move(int x) {
         int y = findY(x);
 
-        grid[x][y] = currentPlayer;
+        grid[x].pieces[y] = currentPlayer;
 
         TurnEvent event = new TurnEvent(this, currentPlayer, isWon(),MessageType.GAMEUPDATE);
 
@@ -41,7 +48,7 @@ class Game {
 
     private int findY(int x) {
         for (int y = 5; y >= 0; y--) {
-            if (grid[x][y] == null) {
+            if (grid[x].pieces[y] == null) {
                 return y;
             }
         }
@@ -85,14 +92,14 @@ class Game {
     }
 
     private boolean checkFour(int x, int y, BiFunction<Integer, Integer, Integer> cx, BiFunction<Integer, Integer, Integer> cy) {
-        String player = grid[cx.apply(x, 0)][cy.apply(y, 0)];
+        String player = grid[cx.apply(x, 0)].pieces[cy.apply(y, 0)];
 
         if (player == null) {
             return false;
         }
 
         for (int i = 1; i < 4; i++) {
-            if (!player.equals(grid[cx.apply(x, i)][cy.apply(y, i)])) {
+            if (!player.equals(grid[cx.apply(x, i)].pieces[cy.apply(y, i)])) {
                 return false;
             }
         }
