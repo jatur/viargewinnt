@@ -33,11 +33,22 @@ class Game {
     }
 
     void move(int x) {
+        if (x < 0 || x >= width) {
+            halt(400, "invalid x position");
+        }
         int y = findY(x);
-
         grid[x].pieces[y] = currentPlayer;
 
-        TurnEvent event = new TurnEvent(this, currentPlayer, isWon(),MessageType.GAMEUPDATE);
+        TurnEvent event;
+        if (isWon()) {
+            event = new TurnEvent(this, currentPlayer, true, MessageType.GAMEUPDATE);
+        } else {
+            if (isDraw()) {
+                event = new TurnEvent(this, "niemand", true, MessageType.GAMEUPDATE);
+            } else {
+                event = new TurnEvent(this, currentPlayer, false, MessageType.GAMEUPDATE);
+            }
+        }
 
         int playerIndex = players.indexOf(currentPlayer);
         playerIndex = (playerIndex + 1) % players.size();
@@ -55,6 +66,19 @@ class Game {
 
         halt(400, "column is full");
         return -1;
+    }
+
+    private boolean isDraw() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // still slots there to fill
+                if (grid[x].pieces[y] == null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private boolean isWon() {
